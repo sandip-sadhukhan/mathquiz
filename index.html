@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            margin:0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .maindiv{
+            background:linear-gradient(to right,rgb(255, 0, 212),rgb(144, 9, 156));
+            width:100%;
+            height:100vh;
+            position: relative;
+        }.status{
+            text-align: center;
+            padding-top:10px;
+            font-size:30px;
+            font-family: Verdana;
+            font-weight: bold;
+            color:white;
+        }
+        .centerdiv{
+            position: absolute;
+            top:50%;
+            left:50%;
+            transform:translate(-50%,-50%);
+            background-color:rgba(255,255,255,.53);
+            padding: 50px;
+            box-shadow: 2px 3px 15px black;
+            border-radius: 55% 45% 48% 52% / 68% 67% 33% 32%;
+        }
+        .centerdiv h1{
+            text-align: center;
+            font-family: verdana;
+            text-shadow: 1px 2px 3px rgb(64, 13, 204);
+            color: rgb(9, 255, 255);
+            animation-name:slide;
+            animation-duration: 1s;
+            animation-iteration-count: infinite;
+            animation-direction: alternate;
+            animation-timing-function:ease-in-out;
+        }
+        .maindiv .pointdiv{
+            text-align: center;
+            margin-top: 10px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            font-size:22px;
+            color:rgb(251, 255, 9);
+        }
+        .boxs{
+            display:flex;
+            align-content: center;
+            justify-content: space-between;
+        }
+        #number1,#number2{
+            width:100px;
+            font-size: 80px;
+            font-family: monospace;
+            text-align: center;
+            height: 90px;
+            margin:20px;
+            color:white;    
+            border:2px solid white;
+            background-color: blueviolet;
+            border-radius: 40px;
+        }
+        #operator{
+            width:35px;
+            font-size: 60px;
+            text-align: center;
+            height: 35px;
+            margin:auto ;
+            background: none;
+            border:none;
+        }
+        #answer{
+            width:250px;
+            border-radius: 40px;
+            font-size: 40px;
+            font-family: monospace;
+            text-align: center;
+            height: 50px;
+            margin:5px;
+            background-color: blueviolet;
+            color:white;    
+            border:2px solid white;
+        }#answer::placeholder{
+            font-size: 25px;
+            color:rgba(255,255,255,.8)
+        }
+        #submit{
+            margin:20px 0;
+            background-color: teal;
+            color:white;
+            padding:10px 50px;
+            font-size: 20px;
+            font-family: sans-serif;
+            border:2px dashed white;
+            
+        }#submit:hover{
+            cursor: pointer;
+            background-color: rgb(0, 98, 128);
+            box-shadow: 2px 3px 10px black;
+        }.copy{text-align: center;color:blue;font-family: sans-serif;font-weight: bold;}
+        @keyframes slide{
+            0%{transform: translate(-30px)}
+            100%{transform: translate(50px)}
+        }
+    </style>
+</head>
+<body>
+    <div class="maindiv">
+        <div class="status">Let's Play</div>
+        <div class="pointdiv">Score : <span id="score">0</span></div>
+        <div class="centerdiv">
+            <h1>Math Quiz</h1>
+            <div class="boxs">
+                <input type="text" id="number1" readonly>
+                <input type="text" id="operator" value="+" readonly>
+                <input type="text" id="number2" readonly>
+            </div>
+            <div class="ansdiv" style="text-align: center;">
+                <input type="text" id="answer"  placeholder="Enter Answer..."><br>
+                <button id="submit">Submit</button>
+            </div>
+            <p class="copy">Developed by sandip</p>
+        </div>
+    </div>
+    <script>
+        generatenumbers();
+        document.getElementById('answer').focus();
+        //Get uis
+        let submitbtn=document.getElementById('submit');
+        var score=0
+        getScoreFromLS();
+        document.getElementById('score').innerHTML=score;
+        //set eventlisteners
+        submitbtn.addEventListener('click',function(){
+            let firstNumber = parseInt(document.getElementById('number1').value);
+            let secondNumber = parseInt(document.getElementById('number2').value);
+            let operator=document.getElementById('operator').value;
+            let answer=parseInt(document.getElementById('answer').value);
+            let status=document.querySelector('.status');
+            let calc=0;
+            switch(operator){
+                case '+': calc=firstNumber+secondNumber;
+                        break;
+                case '-': calc=firstNumber-secondNumber;
+                        break;
+                case 'X': calc=firstNumber*secondNumber;
+                        break;
+            }
+            if(Number.isNaN(answer)){
+                status.innerHTML="Enter a Number!";
+                score-=1;
+            }
+            else if(calc==answer){
+                status.innerHTML="Correct :)";
+                score+=1;
+            }else{
+                status.innerHTML="Wrong :("
+                score-=1;
+            }
+            document.getElementById('score').innerHTML=score;
+            localStorage.setItem('score',score);
+            document.getElementById('answer').value="";
+            generatenumbers();
+            document.getElementById('answer').focus();
+        })
+        document.getElementById('answer').addEventListener('keyup',function(event){
+            if(event.keyCode===13)
+            document.getElementById('submit').click();
+        })
+        function generatenumbers(){
+            let firstNumber = document.getElementById('number1');
+            let secondNumber = document.getElementById('number2');
+            let operator=document.getElementById('operator')
+            //generate numbers
+            let opetaors=['+','-','X'];
+            let randop=Math.floor(Math.random()*3);
+            let num1=Math.floor(Math.random()*10);
+            let num2=Math.floor(Math.random()*10);
+            //set numbers 
+            firstNumber.value=num1;
+            secondNumber.value=num2;
+            operator.value=opetaors[randop];
+        }
+        function getScoreFromLS(){
+            if (localStorage.getItem('score')===null){
+                localStorage.setItem('score',0);
+            }else{
+                score=parseInt(localStorage.getItem('score'));
+            }
+        }
+    </script>
+</body>
+</html>
