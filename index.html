@@ -124,14 +124,19 @@
         @media only screen and (max-width:600px){
             .status{text-align:right;right:5px;top:0;}
             .maindiv .pointdiv{text-align:left;position: absolute;left:5px;top:0;}
-            .timediv{text-align: center;position: absolute;left:46%;top:5px;transform: translateX(-50%)}
+            .timediv{
+                background-color:blueviolet;
+                padding: 5px 10px;
+                border-radius: 10px;
+                box-shadow: 1px 3px 5px black;
+                text-align: center;position: absolute;left:46%;top:5px;transform: translateX(-50%)}
         }
     </style>
 </head>
 <body>
     <div class="maindiv">
         <div class="status">Let's Play</div>
-        <div class="timediv">Time : <span id="time">5</span> S</div>
+        <div class="timediv"><span id="time">5</span> S</div>
         <div class="pointdiv">Score : <span id="score">0</span></div>
         <div class="centerdiv">
             <h1>Math Quiz</h1>
